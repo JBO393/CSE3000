@@ -2,6 +2,7 @@ import os
 import time
 
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 import requests
 import json
 
@@ -22,16 +23,19 @@ response_codes = dict()
 for repo in repos:
     name = repo["name"]
     response = requests.get(f"https://api.github.com/repos/{name}/contents/pom.xml", headers=headers)
-    while response.status_code == 429:
-        print(f"Rate limit exceeded. Repos left: {len(repos) - count}. Sleeping for 10 minutes.")
+
+    while response.status_code == 429 or response.status_code == 403:
+        print(f"Rate limit exceeded. Repos left: {len(repos) - count}. Trying again at {(datetime.now() + timedelta(seconds=600)).strftime("%H:%M:%S")}")
         time.sleep(600)
         response = requests.get(f"https://api.github.com/repos/{name}/contents/pom.xml", headers=headers)
+
     count += 1
     if response.status_code == 200:
         response_json = json.loads(response.text)
         poms.append({name: response_json["content"]})
-    else:
-        print(f"Error: {response.status_code} for {name}")
+
+    if count % 50 == 0:
+        print(f"Repo {count} of {len(repos)}")
 
     response_codes[response.status_code] = response_codes.get(response.status_code, 0) + 1
 
@@ -39,4 +43,3 @@ with open("data/poms.json", mode="w+") as poms_file:
     poms_file.write(json.dumps(poms))
 
 print(response_codes)
-
