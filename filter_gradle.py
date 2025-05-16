@@ -18,36 +18,47 @@ with open("data/repos.json", encoding="utf-8") as repos_file:
 
 count = 0
 response_codes = dict()
+exceptions = []
 
-with open("data/build_files.json", mode="w+") as build_json_file:
-    build_json_file.write("")
+with open("data/build_files.txt", mode="w+") as build_file:
+    build_file.write("")
 
-with open("data/lock_files.json", mode="w+") as lock_json_file:
-    lock_json_file.write("")
+with open("data/lock_files.txt", mode="w+") as lock_file:
+    lock_file.write("")
 
-with open("data/build_files.json", mode="a+") as build_json_file:
-    with open("data/lock_files.json", mode="a+") as lock_json_file:
-        for repo in repos:
-            name = repo["name"]
-            url = f"https://api.github.com/repos/{name}/contents/build.gradle"
-            response = send_api_request(url, headers, len(repos) - count)
+build_file = open("data/build_files.txt", mode="a+")
+lock_file = open("data/lock_files.txt", mode="a+")
 
-            if response.status_code == 200:
-                response_json = json.loads(response.text)
-                build_file_list = [name, response_json["content"]]
-                build_json_file.write(f"{build_file_list}\n")
+for repo in repos:
+    name = repo["name"]
 
-                lock_url = f"https://api.github.com/repos/{name}/contents/gradle.lockfile"
-                lock_response = send_api_request(lock_url, headers, len(repos) - count)
-                if lock_response.status_code == 200:
-                    lock_json = json.loads(lock_response.text)
-                    lock_file_list = [name, lock_json["content"]]
-                    lock_json_file.write(f"{lock_file_list}\n")
 
-            count += 1
-            if count % 50 == 0:
-                print(f"Repo {count} of {len(repos)}")
+    url = f"https://api.github.com/repos/{name}/contents/build.gradle"
+    response = send_api_request(url, headers, len(repos) - count)
 
-            response_codes[response.status_code] = response_codes.get(response.status_code, 0) + 1
+    if response.status_code == 200:
+        response_json = json.loads(response.text)
+        build_file_list = [name, response_json["content"]]
+        build_file.write(f"{build_file_list}\n")
 
+        lock_url = f"https://api.github.com/repos/{name}/contents/gradle.lockfile"
+        lock_response = send_api_request(lock_url, headers, len(repos) - count)
+        if lock_response.status_code == 200:
+            lock_json = json.loads(lock_response.text)
+            lock_file_list = [name, lock_json["content"]]
+            lock_file.write(f"{lock_file_list}\n")
+
+    count += 1
+    if count % 50 == 0:
+        print(f"Repo {count} of {len(repos)}")
+
+    response_codes[response.status_code] = response_codes.get(response.status_code, 0) + 1
+
+    if response.status_code != 200 and response.status_code != 404:
+        exceptions.append(name)
+
+build_file.close()
+lock_file.close()
+
+print(exceptions)
 print(response_codes)
