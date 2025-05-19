@@ -30,8 +30,15 @@ build_file = open("data/build_files.txt", mode="a+")
 lock_file = open("data/lock_files.txt", mode="a+")
 
 for repo in repos:
-    name = repo["name"]
+    if count % 50 == 0:
+        print(f"Repo {count} of {len(repos)}")
 
+    name = repo["name"]
+    languages = map(lambda x : x["language"], repo["metrics"])
+
+    if "Gradle" not in languages:
+        count += 1
+        continue
 
     url = f"https://api.github.com/repos/{name}/contents/build.gradle"
     response = send_api_request(url, headers, len(repos) - count)
@@ -49,8 +56,6 @@ for repo in repos:
             lock_file.write(f"{lock_file_list}\n")
 
     count += 1
-    if count % 50 == 0:
-        print(f"Repo {count} of {len(repos)}")
 
     response_codes[response.status_code] = response_codes.get(response.status_code, 0) + 1
 
