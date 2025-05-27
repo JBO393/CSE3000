@@ -1,7 +1,7 @@
 import ast
 import base64
 
-with open("data/build_files2.txt") as build_files:
+with open("data/build_files.txt") as build_files:
     for build_file in build_files:
         if build_file == "\n":
             continue
@@ -10,10 +10,10 @@ with open("data/build_files2.txt") as build_files:
         path = build_file_list[1]
         content = base64.b64decode(build_file_list[2])
 
-        with open(f"data/build_files2/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
+        with open(f"data/build_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
             file.write(content)
 
-with open("data/lock_files2.txt") as lock_files:
+with open("data/lock_files.txt") as lock_files:
     for lock_file in lock_files:
         if lock_file == "\n":
             continue
@@ -22,5 +22,5 @@ with open("data/lock_files2.txt") as lock_files:
         path = lock_file_list[1]
         content = base64.b64decode(lock_file_list[2])
 
-        with open(f"data/lock_files2/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
+        with open(f"data/lock_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
             file.write(content)
