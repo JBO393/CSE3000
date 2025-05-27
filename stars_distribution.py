@@ -23,17 +23,20 @@ while current_page <= num_pages and current_page <= 10:
     repos = response_json["items"]
     current_page += 1
 
-    for repo in repos:
-        if count % 50 == 0:
-            print(f"Repo {count} of {num_repos}")
+    with open("data/stars.txt", "a+") as stars_file:
+        for repo in repos:
+            if count % 50 == 0:
+                print(f"Repo {count} of {num_repos}")
 
-        name = repo["repository"]["full_name"]
-        url = f"https://api.github.com/repos/{name}"
-        response = requests.get(url, headers=headers)
+            name = repo["repository"]["full_name"]
+            url = f"https://api.github.com/repos/{name}"
+            response = requests.get(url, headers=headers)
 
-        stars = response.json()["stargazers_count"]
-        stars_dict[stars] = stars_dict.get(stars, 0) + 1
+            stars = response.json()["stargazers_count"]
+            stars_dict[stars] = stars_dict.get(stars, 0) + 1
 
-        count += 1
+            stars_file.write(f"{[repo["path"], stars]}\n")
+
+            count += 1
 
 print(stars_dict)
