@@ -1,0 +1,11 @@
+ajoberstar/gradle-git-publish
+cronn/reflection-util
+embulk/embulk-input-jdbc
+bwaldvogel/log4j-systemd-journal-appender
+auth0-developer-hub/api_spring_java_hello-world
+jonatan-ivanov/resourceater
+jonatan-ivanov/teahouse
+embulk/embulk-output-s3
+cronn/ssh-proxy
+embulk/embulk-output-jdbc
+DataDog/vulnerable-java-application
