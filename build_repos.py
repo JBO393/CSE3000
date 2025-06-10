@@ -18,16 +18,16 @@ java_versions = {8: os.getenv("JAVA8"),
                  24: os.getenv("JAVA24")}
 gradle_path = os.getenv("GRADLE")
 
-with open("data/lock_files.txt", mode="r") as lock_files:
-    for lock_file in lock_files:
-        lock_file_list = ast.literal_eval(lock_file)
-        repos.add(lock_file_list[0])
-        path = f"data/cloned_repos/{lock_file_list[0]}/{lock_file_list[1]}"
-        if os.path.exists(path):
-            print("Found")
-            # os.remove(path)
-        else:
-            print(f"Could not find lock file '{lock_file_list[0]}/{lock_file_list[1]}'")
+# with open("data/lock_files.txt", mode="r") as lock_files:
+#     for lock_file in lock_files:
+#         lock_file_list = ast.literal_eval(lock_file)
+#         repos.add(lock_file_list[0])
+#         path = f"data/cloned_repos/{lock_file_list[0]}/{lock_file_list[1]}"
+#         if os.path.exists(path):
+#             print("Found")
+#             # os.remove(path)
+#         else:
+#             print(f"Could not find lock file '{lock_file_list[0]}/{lock_file_list[1]}'")
 
 
 def detect_java_version(repo, current_folder):
