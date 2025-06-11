@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import json
 
-from send_api_request import send_api_request
+from shared_functions import send_api_request
 
 load_dotenv()
 
