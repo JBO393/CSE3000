@@ -5,26 +5,24 @@ import time
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()
-
-java_versions = {8: os.getenv("JAVA8"),
-                 11: os.getenv("JAVA11"),
-                 17: os.getenv("JAVA17"),
-                 21: os.getenv("JAVA21"),
-                 23: os.getenv("JAVA23"),
-                 24: os.getenv("JAVA24")}
-gradle_path = os.getenv("GRADLE")
-
 def detect_java_version(repo, current_folder):
     with open(f"{current_folder}/data/java_versions.json", mode="r") as f:
         java_versions_json = json.load(f)
         return java_versions_json[repo]
 
 def build_repos(repos, current_folder, output_folder):
+    load_dotenv()
+
+    java_versions = {8: os.getenv("JAVA8"),
+                     11: os.getenv("JAVA11"),
+                     17: os.getenv("JAVA17"),
+                     21: os.getenv("JAVA21"),
+                     23: os.getenv("JAVA23"),
+                     24: os.getenv("JAVA24")}
+    gradle_path = os.getenv("GRADLE")
+
     count = 1
     for repo in repos:
-        if repo != "ajoberstar/gradle-git-publish":
-            continue
         if repo == "CDCgov/prime-simplereport":
             repo = "CDCgov/prime-simplereport/backend"
 

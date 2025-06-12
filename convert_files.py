@@ -10,7 +10,7 @@ with open("data/build_files.txt") as build_files:
         path = build_file_list[1]
         content = base64.b64decode(build_file_list[2])
 
-        with open(f"data/build_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
+        with open(f"data/converted_files/build_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
             file.write(content)
 
 with open("data/lock_files.txt") as lock_files:
@@ -22,5 +22,5 @@ with open("data/lock_files.txt") as lock_files:
         path = lock_file_list[1]
         content = base64.b64decode(lock_file_list[2])
 
-        with open(f"data/lock_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
+        with open(f"data/converted_files/lock_files/{name.replace('/', '+')}+{path.replace('/', '+')}", mode="wb+") as file:
             file.write(content)

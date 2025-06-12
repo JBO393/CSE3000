@@ -17,6 +17,7 @@ with open("data/lock_files.txt", mode="r") as lock_files:
             path = f"data/cloned_repos/{lock_file_list[0]}/{lock_file_list[1]}"
             if os.path.exists(path):
                 os.remove(path)
+                print(f"Lock file '{lock_file_list[0]}/{lock_file_list[1]}' removed")
             else:
                 print(f"Could not find lock file '{lock_file_list[0]}/{lock_file_list[1]}'")
 
