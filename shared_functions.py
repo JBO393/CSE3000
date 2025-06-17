@@ -60,7 +60,7 @@ def send_api_request(url, headers, repos_left):
         if int(response_headers["X-RateLimit-Remaining"]) > 0:
             break
 
-        rate_limit_reset = int(response_headers["x-ratelimit-reset"]) + 2
+        rate_limit_reset = int(response_headers["x-ratelimit-reset"]) + 5
         formatted_time = time.strftime("%H:%M:%S", time.localtime(rate_limit_reset))
         print(f"Rate limit exceeded. Repos left: {repos_left}. Trying again at {formatted_time}")
         time.sleep(rate_limit_reset - time.time())
