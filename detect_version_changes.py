@@ -4,10 +4,10 @@ from semantic_version import Version
 
 change_dict = {
     0: "no change",
-    1: "patch",
-    2: "minor",
-    3: "major",
-    4: "added",
+    1: "added",
+    2: "patch",
+    3: "minor",
+    4: "major",
     5: "removed"
 }
 repos = set()
@@ -60,11 +60,11 @@ def parse_version(line):
 
 def compare_versions(old_version, new_version):
     if new_version.major > old_version.major:
-        return 3
+        return 4
     if new_version.minor > old_version.minor:
-        return 2
+        return 3
     if new_version.patch > old_version.patch:
-        return 1
+        return 2
 
     return 0
 
@@ -93,17 +93,19 @@ for lock_file in lock_files:
             if version is None:
                 continue
 
+            new_dependencies.add(dependency)
+
             if dependency not in changed_versions[repo_name]:
                 changed_versions[repo_name][dependency] = 0
 
             if dependency not in original_versions:
-                max_diff = max(changed_versions[repo_name][dependency], 4)
+                max_diff = max(changed_versions[repo_name][dependency], 1)
                 changed_versions[repo_name][dependency] = max_diff
                 continue
 
             for configuration in configurations:
-                new_dependencies.add(dependency)
                 if configuration not in original_versions[dependency]:
+                    max_diff = max(changed_versions[repo_name][dependency], 1)
                     continue
 
                 if version != original_versions[dependency][configuration]:
@@ -145,3 +147,9 @@ for dependency in changes_per_dependency.keys():
     if sum(changes_per_dependency[dependency].values()) > 1:
         print(f"'{dependency}': {changes_per_dependency[dependency]}")
 
+total_changes = dict()
+for repo in changes_per_repo.values():
+    for change in repo.keys():
+        total_changes[change] = total_changes.get(change, 0) + repo[change]
+
+print(total_changes)
